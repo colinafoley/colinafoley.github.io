@@ -17,6 +17,7 @@
 
     $('document').ready( function () {
      $('textarea').change( function () {
+        $('#output').html('');
         content = $(this).val();
 
         content_array = content.split('#');
