@@ -1,0 +1,12 @@
+name = Migrate Interactions
+description = This module includes the migrations for importing the Interactions database
+
+package = Migration
+core = 7.x
+
+dependencies[] = migrate
+
+files[] = migrate_interactions.migrate.inc
+files[] = term.inc
+files[] = node.inc
+files[] = field_collection.inc

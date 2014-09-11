@@ -1,0 +1,10 @@
+name = "LumDev D6 to D7 migration"
+descirption = "Migrate content and users from D6 to D7"
+package = "Migration"
+core = 7.x
+
+dependencies[] = migrate
+dependencies[] = migrate_d2d
+
+files[] = user.inc
+files[] = node.inc
