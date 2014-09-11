@@ -1,0 +1,349 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>Migrate Magic: An Overview</title>
+
+		<meta name="description" content="An overview of the Migrate Drupal module with specific examples for three types of migrations.">
+		<meta name="author" content="Colin A. Foley">
+
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<link rel="stylesheet" href="css/reveal.min.css">
+		<link rel="stylesheet" href="css/theme/night.css" id="theme">
+
+		<!-- For syntax highlighting -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- If the query includes 'print-pdf', include the PDF print sheet -->
+		<script>
+			if( window.location.search.match( /print-pdf/gi ) ) {
+				var link = document.createElement( 'link' );
+				link.rel = 'stylesheet';
+				link.type = 'text/css';
+				link.href = 'css/print/pdf.css';
+				document.getElementsByTagName( 'head' )[0].appendChild( link );
+			}
+		</script>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+
+		<div class="reveal">
+
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<div class="slides">
+				<section>
+					<h1>Migrate Magic:</h1>
+          <h2>An Overview</h2>
+					<p>
+						<small>Colin A Foley <<a href="mailto:caf209@lehigh.edu">caf209@lehigh.edu</a>> / <a href="http://twitter.com/colinafoley">@colinafoley</a></small>
+					</p>
+          <aside class="notes">
+            <p>Migrate has become more and more popular and is now included in Drupal 8 Core. With the removal of an upgrade path to Drupal 8, Migrate is more important than ever.</p>
+          <p>We will review the object-oriented architecture of Migrate in Drupal 7 and look at three example migrations using source datasets from Drupal, MySQL, and MS Access.</p>
+          </aside>
+				</section>
+
+        <!--
+        # What is migrate all about?
+        # Why use Migrate? Who has used Feeds? Who has kept track of nids manually?
+        -->
+        <section>
+          <section>
+            <h1>What is migrate all about?</h1>
+            <aside class="notes">
+              <p>Migrate is about getting your data into Drupal, and allowing you to transform it on the way</p>
+              <p>You might ask, "What about Feeds and Feeds Tamper?"</p>
+              <p>Who has used Feeds? Can I see a show of hands? Who has kept track of nids and tids manually in spreadsheets/CSVs?</p>
+              <p>This is where the magic of Migrate comes into play</p>
+            </aside>
+          </section>
+          <section>
+            <h2>Migrate is about getting your data work done.</h2>
+            <p class="fragment grow">In a <strong>reproducible</strong> manner</p>
+            <p class="fragment grow">In an <strong>automated</strong> manner</p>
+            <p class="fragment grow">In a <strong>revertable</strong> manner</p>
+
+            <aside class="notes">
+              <p>There might be a mountainous learning curve, but once you get your migrations written this stuff has that long sought after "it just works" feeling.</p>
+            </aside>
+          </section>
+        </section>
+
+        <!--
+        # Migrate's structure and its advantages
+        -->
+        <section>
+          <section>
+            <h1>Structure and Advantages</h1>
+          </section>
+          <section>
+            <h2>Object-oriented</h2>
+
+            <aside class="notes">
+              <p>This is obviously the big one and I'm sure you've heard it before.</p>
+            </aside>
+          </section>
+          <section>
+            <h2>Fundamentally an API</h2>
+            <p class="fragment">Similar to extending a base theme</p>
+            <p class="fragment">Similar to writing your own entities relying on the entity module</p>
+            <p class="fragment">Bolt your migrations onto the migrate engine and away you go</p>
+          </section>
+        </section>
+
+        <!--
+        # Example migrations
+        ## As with anything there is always more than one way to do things
+        -->
+        <section>
+          <h1>Example Migrations</h1>
+          <ol>
+            <li class="">Drupal to Drupal</li>
+            <li class="">MySQL</li>
+            <li class="">MS Access (CSV)</li>
+          </ol>
+        </section>
+        <section>
+          <section>
+            <h1>Basics</h1>
+            <h2>across all three examples</h2>
+
+            <aside class="notes">
+              <p>As with anything in Drupal, there is always more than one way to do things</p>
+              <p>The setup we're going to look at is what has worked for me and what I find to be understandable</p>
+              <p>You may find conflicting documentation on the web</p>
+            </aside>
+          </section>
+          <section>
+            <h2>Module versions</h2>
+            <ul>
+              <li class=""><a href="https://www.drupal.org/node/2029049" target="_blank">migrate-7.x-2.6-rc1</a></li>
+              <li class=""><a href="https://www.drupal.org/node/2001680" target="_blank">migrate_d2d-7.x-2.1-beta1</a></li>
+              <li class=""><a href="https://www.drupal.org/project/migrate_extras" target="_blank">migrate_extras</a>
+                <ul>
+                  <li class="">Never used it, not sure of versions</li>
+                </ul>
+              </li>
+            </ul>
+            <aside class="notes">
+              <p>These versions are not the stable release versions.</p>
+              <p>migrate_d2d is only needed for Drupal to Drupal migrations</p>
+            </aside>
+          </section>
+          <section>
+            <h2>Module structure</h2>
+            <ul style="list-style-type: none;">
+              <li>../modules/migrate</li>
+              <li>../modules/migrate_d2d</li>
+              <li>../modules/migrate_mymodule
+                <ul style="list-style-type: none;">
+                  <li>- migrate_mymodule.info</li>
+                  <li>- migrate_mymodule.migrate.inc</li>
+                  <li>- migrate_mymodule.module</li>
+                  <li><em>- node.inc</em></li>
+                  <li><em>- term.inc</em></li>
+                  <li><em>- user.inc</em></li>
+                  <li><em>- domain-specific-object.inc</em></li>
+                </ul>
+              </li>
+            </ul>
+            <aside class="notes">
+              <ul>
+                <li>The common practice is to prefix your module name with "migrate_"</li>
+                <li>The .info file is critical for notifying migrate which files to include.
+                  <ul><li>Your migration classes are within the .inc files.</li></ul>
+                </li>
+                <li>The .migrate.inc holds the dirt on what migrations you have available</li>
+                <li>The .module file will be empty, unless you have some other Drupally goodness occurring</li>
+              </ul>
+            </aside>
+          </section>
+          <section>
+            <h3>.info</h3>
+            <p>Here's an example from migrate_interactions.info</p>
+            <pre><code class="apache">
+            name = Migrate Interactions
+            description = This module includes the migrations for importing the Interactions database
+
+            package = Migration
+            core = 7.x
+
+            dependencies[] = migrate
+
+            files[] = migrate_interactions.migrate.inc
+            files[] = term.inc
+            files[] = node.inc
+            files[] = field_collection.inc
+            </code></pre>
+          </section>
+          <section>
+            <h3>.migrate.inc</h3>
+            <small>HOOK_migrate_api()</small>
+            <pre><code class="php">&lt;?php
+
+function migrate_mymodule_migrate_api() {
+  /* ... */
+  $api = array(...);
+  /* ... */
+  return $api;
+}
+            </code></pre>
+            <aside class="notes">
+              <p>This is usually the only thing in your .migrate.inc file</p>
+              <p>As with any other API system within Drupal, we rely on a HOOK</p>
+            </aside>
+          </section>
+          <section>
+            <h3>.migrate.inc cont'd</h3>
+            <pre><code class="php">&lt;?php
+
+function migrate_mymodule_migrate_api() {
+  $common_arguments = array(
+    'source_version' => 6,
+    'source_connection' => 'legacy',
+  );
+
+  $api = array(
+    'api' => 2,
+    'groups' => array(
+      'user' => array(
+        'title' => 'User Migrations',
+      ),
+      'taxonomy' => array(
+        'title' => 'Taxonomy Migrations',
+      ),
+      'file' => array(
+        'title' => 'File Migrations',
+      ),
+      'content' => array(
+        'title' => 'Content Migrations',
+      ),
+      'comment' => array(
+        'title' => 'Comment Migrations',
+      ),
+    ),
+    'migrations' => array(
+      'LumdevRole' => array(
+        'class_name' => 'LumdevRoleMigration',
+        'group_name' => 'user',
+        'description' => t('Migrate lumdev roles.'),
+        'role_mappings' => array(
+          'anonymous user' => 'anonymous user',
+          'authenticated user' => 'authenticated user',
+          'Full Admin' => 'administrator',
+        ),
+      ),
+      'LumdevUser' => array(
+        'class_name' => 'LumdevUserMigration',
+        'group_name' => 'user',
+        'description' => t('Migrate lumdev users.'),
+        'role_migration' => 'LumdevRole',
+        'dependencies' => array('LumdevRole'),
+      ),
+      /* ... */
+    ),
+  );
+
+  foreach ($api['migrations'] as &$migration) {
+    $migration = $migration + $common_arguments;
+  }
+
+  return $api;
+}
+            </code></pre>
+            <aside class="notes">
+              <p>Highlight groups, migrations, class name, other parameters (role_mappings), and dependencies</p>
+              <p>"other parameters": different constructors look for different arguments</p>
+              <p>discuss common arguments and how we package them into each of the migrations</p>
+              <p>Basically, the migrations are defined here, and any arguments within the Migration get passed back up the chain (OOP inheritance)</p>
+            </aside>
+          </section>
+          <section>
+            <h3>Various and Sundry .inc</h3>
+            <p>This is where the heavy lifting occurs</p>
+            <p>More specific to the type of migration</p>
+            <aside class="notes">
+              <p>We'll take a closer look at these when we look at our specific examples</p>
+            </aside>
+          </section>
+          <section>
+            <h3>drush</h3>
+            <pre><code class="bash">$ drush cc all #register your .inc</code></pre>
+            <pre><code class="bash">$ drush mreg #notify migrate of the new classes</code></pre>
+            <pre><code class="bash">$ drush ma [migration_name|--[all|group]] #audit migrations; look for problems</code></pre>
+            <pre><code class="bash">$ drush mi [migration_name|--[all|group]] [--limit ...] #run migrations</code></pre>
+            <aside class="notes">
+              <p>Everyone's favorite, cc all; use this to notify drupal to include your files from your .info</p>
+              <p>mreg is the migration registration command</p>
+              <p>ma is the migration audit command; it will run some preliminary checks on your migrations</p>
+              <p>mi will run the migrations, you can optionally specify a limit to the number of items or, supposedly to a time frame</p>
+            </aside>
+          </section>
+        </section>
+        <section>
+          <h1>Raw Examples</h1>
+        </section>
+        <section>
+          <h1>Questions?</h1>
+        </section>
+
+        <!--
+        ## Module setup with Migrate
+        ### Always use the appropriate versions
+        ## Drush commands
+        ## Migration registration
+        ## Drupal to Drupal
+        ## MySQL to Drupal
+        ## MS Access (really just CSV) to Drupal
+        -->
+
+			</div>
+
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.min.js"></script>
+
+		<script>
+
+			// Full list of configuration options available here:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+
+				theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+				transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+				// Parallax scrolling
+				// parallaxBackgroundImage: 'https://s3.amazonaws.com/hakim-static/reveal-js/reveal-parallax-1.jpg',
+				// parallaxBackgroundSize: '2100px 900px',
+
+				// Optional libraries used to extend on reveal.js
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+					{ src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+				]
+			});
+
+		</script>
+
+	</body>
+</html>
