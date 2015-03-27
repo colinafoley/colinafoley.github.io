@@ -1,0 +1,12 @@
+# Site settings
+title: Blog
+email: colinafoley@gmail.com
+description: > # this means to ignore newlines until "baseurl:"
+  &copy; 2015 Colin A Foley
+baseurl: "" # the subpath of your site, e.g. /blog/
+url: "http://colinafoley.github.io" # the base hostname & protocol for your site
+twitter_username: colinafoley
+github_username:  colinafoley
+
+# Build settings
+markdown: kramdown
