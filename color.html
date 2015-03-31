@@ -1,0 +1,40 @@
+<html>
+<head>
+   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+</head>
+<body>
+  <textarea rows=24 cols=82>
+  </textarea>
+  <div id="output"></div>
+  <script type="text/javascript">
+    function showColorization(hex, snippet) {
+      new_string = '<div class="wrapper">';
+        new_string += '<p>' + snippet + '</p>';
+        new_string += '<div style="background-color:#' + hex + '; width:30px; height:30px;"></div>';
+      new_string += '</div>';
+      $(new_string).appendTo('#output');
+    }
+
+    $('document').ready( function () {
+     $('textarea').change( function () {
+        $('#output').html('');
+        content = $(this).val();
+
+        content_array = content.split('#');
+        var pounded_array = []
+
+        for (var i = 0; i < content_array.length; i++) {
+          possible_hex = content_array[i].substring(0, 6);
+          var isHex  = /(^#[0-9A-F]{6}$)|(^#[0-9A-F]{3}$)/i.test('#'+possible_hex);
+
+          console.log(isHex);
+          if (isHex) {
+            showColorization(possible_hex, content_array[i]);
+          }
+        }
+      });
+    });
+
+  </script>
+</body>
+</html>

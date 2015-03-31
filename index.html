@@ -1,40 +1,23 @@
-<html>
-<head>
-   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-</head>
-<body>
-  <textarea rows=24 cols=82>
-  </textarea>
-  <div id="output"></div>
-  <script type="text/javascript">
-    function showColorization(hex, snippet) {
-      new_string = '<div class="wrapper">';
-        new_string += '<p>' + snippet + '</p>';
-        new_string += '<div style="background-color:#' + hex + '; width:30px; height:30px;"></div>';
-      new_string += '</div>';
-      $(new_string).appendTo('#output');
-    }
+---
+layout: default
+---
 
-    $('document').ready( function () {
-     $('textarea').change( function () {
-        $('#output').html('');
-        content = $(this).val();
+<div class="home">
 
-        content_array = content.split('#');
-        var pounded_array = []
+  <h1 class="page-heading">Posts</h1>
 
-        for (var i = 0; i < content_array.length; i++) {
-          possible_hex = content_array[i].substring(0, 6);
-          var isHex  = /(^#[0-9A-F]{6}$)|(^#[0-9A-F]{3}$)/i.test('#'+possible_hex);
+  <ul class="post-list">
+    {% for post in site.posts %}
+      <li>
+        <span class="post-meta">{{ post.date | date: "%b %-d, %Y" }}</span>
 
-          console.log(isHex);
-          if (isHex) {
-            showColorization(possible_hex, content_array[i]);
-          }
-        }
-      });
-    });
+        <h2>
+          <a class="post-link" href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a>
+        </h2>
+      </li>
+    {% endfor %}
+  </ul>
 
-  </script>
-</body>
-</html>
+  <p class="rss-subscribe">subscribe <a href="{{ "/feed.xml" | prepend: site.baseurl }}">via RSS</a></p>
+
+</div>
